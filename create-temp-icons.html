@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Extension Icons</title>
+</head>
+<body>
+    <h1>Creating NotebookLM Extension Icons</h1>
+    <p>Click the button below to generate and download all required icon sizes:</p>
+    <button onclick="createAllIcons()">Generate All Icons</button>
+    <div id="status"></div>
+    
+    <script>
+        function createAllIcons() {
+            const sizes = [16, 32, 48, 128];
+            const status = document.getElementById('status');
+            status.innerHTML = '<p>Generating icons...</p>';
+            
+            sizes.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                
+                const ctx = canvas.getContext('2d');
+                
+                // Create gradient background
+                const gradient = ctx.createLinearGradient(0, 0, size, size);
+                gradient.addColorStop(0, '#1976d2');
+                gradient.addColorStop(1, '#42a5f5');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, size, size);
+                
+                // Add text
+                ctx.fillStyle = 'white';
+                ctx.font = `bold ${size/2}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('N', size/2, size/2);
+                
+                // Create download link
+                canvas.toBlob(function(blob) {
+                    const link = document.createElement('a');
+                    link.download = `icon${size}.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.textContent = `Download icon${size}.png`;
+                    link.style.display = 'block';
+                    link.style.margin = '5px 0';
+                    document.body.appendChild(link);
+                    
+                    // Auto-click to download
+                    link.click();
+                });
+            });
+            
+            status.innerHTML = '<p style="color: green;">✅ Icons generated! Please save them in the assets/icons/ folder with the correct names.</p>';
+        }
+    </script>
+</body>
+</html>
